@@ -5,6 +5,17 @@ export interface KeyPoint {
   modernApplication: string;
 }
 
+export interface BookFact {
+  label: string;
+  text: string;
+}
+
+export interface FamousQuote {
+  quote: string;
+  meaning: string;
+  theme?: string;
+}
+
 export interface Book {
   id: string;
   order: number;
@@ -14,7 +25,9 @@ export interface Book {
   essence: string;
   accent: string;
   accentSoft: string;
+  overview: BookFact[];
   keyPoints: KeyPoint[];
+  famousQuotes: FamousQuote[];
 }
 
 export type CardCategory =

@@ -1,6 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { books, getBook, getCardsForBook } from "@/lib/data";
+import type { FamousQuote } from "@/lib/types";
+
+function groupQuotesByTheme(quotes: FamousQuote[]) {
+  const groups: { theme: string | null; quotes: FamousQuote[] }[] = [];
+  for (const q of quotes) {
+    const theme = q.theme ?? null;
+    const last = groups[groups.length - 1];
+    if (last && last.theme === theme) {
+      last.quotes.push(q);
+    } else {
+      groups.push({ theme, quotes: [q] });
+    }
+  }
+  return groups;
+}
 
 export function generateStaticParams() {
   return books.map((b) => ({ id: b.id }));
@@ -56,6 +71,27 @@ export default async function BookPage({
         </p>
       </header>
 
+      <section className="mt-8">
+        <h2 className="mb-4 font-serif-jp text-lg font-bold sm:text-xl">
+          この書物について
+        </h2>
+        <dl className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-surface p-5 sm:p-6">
+          {book.overview.map((fact) => (
+            <div key={fact.label} className="flex flex-col gap-1 sm:flex-row sm:gap-4">
+              <dt
+                className="shrink-0 text-xs font-bold tracking-wide sm:w-24 sm:pt-0.5"
+                style={{ color: book.accent }}
+              >
+                {fact.label}
+              </dt>
+              <dd className="text-[14.5px] leading-relaxed text-foreground/85">
+                {fact.text}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       <section className="mt-10">
         <h2 className="mb-5 font-serif-jp text-lg font-bold sm:text-xl">
           現代に活かす、4つの要点
@@ -102,6 +138,44 @@ export default async function BookPage({
           ))}
         </div>
       </section>
+
+      {book.famousQuotes.length > 0 && (
+        <section className="mt-10">
+          <h2 className="mb-1 font-serif-jp text-lg font-bold sm:text-xl">名言集</h2>
+          <p className="mb-5 text-[13.5px] text-muted">
+            「{book.title}」に残る、現代にも語り継がれる言葉の数々。
+          </p>
+          <div className="flex flex-col gap-6">
+            {groupQuotesByTheme(book.famousQuotes).map((group, gi) => (
+              <div key={gi}>
+                {group.theme && (
+                  <p
+                    className="mb-3 text-xs font-bold tracking-wide"
+                    style={{ color: book.accent }}
+                  >
+                    {group.theme}
+                  </p>
+                )}
+                <div className="flex flex-col gap-3">
+                  {group.quotes.map((q) => (
+                    <article
+                      key={q.quote}
+                      className="rounded-2xl border border-border/70 bg-surface p-5 sm:p-6"
+                    >
+                      <p className="font-serif-jp text-base font-bold leading-snug sm:text-lg">
+                        「{q.quote}」
+                      </p>
+                      <p className="mt-3 text-[14.5px] leading-relaxed text-foreground/80">
+                        {q.meaning}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {cards.length > 0 && (
         <section className="mt-10 rounded-2xl border border-border/70 bg-surface-muted p-6 text-center sm:p-8">
