@@ -26,7 +26,7 @@ export default function BookCard({ book }: { book: Book }) {
         </p>
       </div>
 
-      <p className="text-sm leading-relaxed text-muted">{book.essence}</p>
+      <p className="text-base leading-relaxed text-muted">{book.essence}</p>
 
       <span className="mt-auto flex items-center gap-1 pt-1 text-sm font-medium text-foreground/80 transition-transform group-hover:translate-x-0.5">
         要点を読む

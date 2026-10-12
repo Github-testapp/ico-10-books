@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { books, getBook, getCardsForBook } from "@/lib/data";
 import type { FamousQuote } from "@/lib/types";
+import Furigana from "@/components/Furigana";
 
 function groupQuotesByTheme(quotes: FamousQuote[]) {
   const groups: { theme: string | null; quotes: FamousQuote[] }[] = [];
@@ -60,31 +61,31 @@ export default async function BookPage({
           {String(book.order).padStart(2, "0")}
         </span>
         <div>
-          <h1 className="font-serif-jp text-3xl font-black sm:text-4xl">{book.title}</h1>
-          <p className="mt-1.5 text-base font-bold" style={{ color: book.accent }}>
+          <h1 className="font-serif-jp text-4xl font-black sm:text-5xl">{book.title}</h1>
+          <p className="mt-2 text-lg font-bold" style={{ color: book.accent }}>
             {book.subtitle}
           </p>
         </div>
-        <p className="text-xs uppercase tracking-wide text-muted">{book.era}</p>
-        <p className="text-[15px] leading-relaxed text-foreground/85 sm:text-base">
+        <p className="text-sm uppercase tracking-wide text-muted">{book.era}</p>
+        <p className="text-base leading-relaxed text-foreground/85 sm:text-lg">
           {book.essence}
         </p>
       </header>
 
       <section className="mt-8">
-        <h2 className="mb-4 font-serif-jp text-lg font-bold sm:text-xl">
+        <h2 className="mb-4 font-serif-jp text-xl font-bold sm:text-2xl">
           この書物について
         </h2>
-        <dl className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-surface p-5 sm:p-6">
+        <dl className="flex flex-col gap-4 rounded-2xl border border-border/70 bg-surface p-5 sm:p-6">
           {book.overview.map((fact) => (
             <div key={fact.label} className="flex flex-col gap-1 sm:flex-row sm:gap-4">
               <dt
-                className="shrink-0 text-xs font-bold tracking-wide sm:w-24 sm:pt-0.5"
+                className="shrink-0 text-sm font-bold tracking-wide sm:w-24 sm:pt-0.5"
                 style={{ color: book.accent }}
               >
                 {fact.label}
               </dt>
-              <dd className="text-[14.5px] leading-relaxed text-foreground/85">
+              <dd className="text-base leading-relaxed text-foreground/85">
                 {fact.text}
               </dd>
             </div>
@@ -93,7 +94,7 @@ export default async function BookPage({
       </section>
 
       <section className="mt-10">
-        <h2 className="mb-5 font-serif-jp text-lg font-bold sm:text-xl">
+        <h2 className="mb-5 font-serif-jp text-xl font-bold sm:text-2xl">
           現代に活かす、4つの要点
         </h2>
         <div className="flex flex-col gap-4">
@@ -104,31 +105,34 @@ export default async function BookPage({
             >
               <div className="flex items-start gap-3">
                 <span
-                  className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
+                  className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
                   style={{ backgroundColor: book.accentSoft, color: book.accent }}
                 >
                   {i + 1}
                 </span>
                 <div className="flex-1">
-                  <h3 className="font-serif-jp text-lg font-bold leading-snug">
+                  <h3 className="font-serif-jp text-xl font-bold leading-snug">
                     {kp.title}
                   </h3>
                   {kp.original && (
-                    <p className="mt-2 border-l-2 pl-3 text-sm italic leading-relaxed text-muted" style={{ borderColor: book.accent }}>
-                      「{kp.original}」
+                    <p
+                      className="mt-2 border-l-2 pl-3 text-base italic leading-loose text-muted"
+                      style={{ borderColor: book.accent }}
+                    >
+                      「<Furigana text={kp.original} />」
                     </p>
                   )}
-                  <p className="mt-3 text-[15px] leading-relaxed text-foreground/85">
+                  <p className="mt-3 text-base leading-relaxed text-foreground/85">
                     {kp.description}
                   </p>
                   <div
                     className="mt-4 rounded-xl p-4"
                     style={{ backgroundColor: book.accentSoft }}
                   >
-                    <p className="text-xs font-bold tracking-wide" style={{ color: book.accent }}>
+                    <p className="text-sm font-bold tracking-wide" style={{ color: book.accent }}>
                       今の暮らしに活かすなら
                     </p>
-                    <p className="mt-1.5 text-[14.5px] leading-relaxed text-foreground/90">
+                    <p className="mt-1.5 text-base leading-relaxed text-ink-on-tint">
                       {kp.modernApplication}
                     </p>
                   </div>
@@ -141,8 +145,8 @@ export default async function BookPage({
 
       {book.famousQuotes.length > 0 && (
         <section className="mt-10">
-          <h2 className="mb-1 font-serif-jp text-lg font-bold sm:text-xl">名言集</h2>
-          <p className="mb-5 text-[13.5px] text-muted">
+          <h2 className="mb-1 font-serif-jp text-xl font-bold sm:text-2xl">名言集</h2>
+          <p className="mb-5 text-sm text-muted">
             「{book.title}」に残る、現代にも語り継がれる言葉の数々。
           </p>
           <div className="flex flex-col gap-6">
@@ -150,7 +154,7 @@ export default async function BookPage({
               <div key={gi}>
                 {group.theme && (
                   <p
-                    className="mb-3 text-xs font-bold tracking-wide"
+                    className="mb-3 text-sm font-bold tracking-wide"
                     style={{ color: book.accent }}
                   >
                     {group.theme}
@@ -162,10 +166,10 @@ export default async function BookPage({
                       key={q.quote}
                       className="rounded-2xl border border-border/70 bg-surface p-5 sm:p-6"
                     >
-                      <p className="font-serif-jp text-base font-bold leading-snug sm:text-lg">
-                        「{q.quote}」
+                      <p className="font-serif-jp text-lg font-bold leading-loose sm:text-xl">
+                        「<Furigana text={q.quote} />」
                       </p>
-                      <p className="mt-3 text-[14.5px] leading-relaxed text-foreground/80">
+                      <p className="mt-3 text-base leading-relaxed text-foreground/80">
                         {q.meaning}
                       </p>
                     </article>

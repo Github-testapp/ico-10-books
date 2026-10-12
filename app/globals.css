@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  font-size: 113%;
+}
+
 :root {
   --background: #f7f1e6;
   --foreground: #241f18;
@@ -9,21 +13,20 @@
   --muted: #7a6f5c;
   --accent: #8c3b44;
   --accent-foreground: #fffaf0;
+  --ink-on-tint: #241f18;
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171310;
-    --foreground: #ece4d4;
-    --surface: #211b16;
-    --surface-muted: #2a231c;
-    --border: #3b3227;
-    --muted: #a99a80;
-    --accent: #d99a4e;
-    --accent-foreground: #241705;
-    color-scheme: dark;
-  }
+:root[data-theme="dark"] {
+  --background: #171310;
+  --foreground: #ece4d4;
+  --surface: #211b16;
+  --surface-muted: #2a231c;
+  --border: #3b3227;
+  --muted: #a99a80;
+  --accent: #d99a4e;
+  --accent-foreground: #241705;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -35,6 +38,7 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-ink-on-tint: var(--ink-on-tint);
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);
 }
@@ -65,4 +69,16 @@ body {
 }
 .scrollbar-none {
   scrollbar-width: none;
+}
+
+body,
+.themed-surface {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+ruby rt {
+  font-size: 0.55em;
+  font-weight: 500;
+  opacity: 0.75;
+  user-select: none;
 }

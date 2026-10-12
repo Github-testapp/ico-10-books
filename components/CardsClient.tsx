@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { books, flashcards, categories } from "@/lib/data";
 import type { CardCategory } from "@/lib/types";
+import Furigana from "./Furigana";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -76,15 +77,15 @@ export default function CardsClient() {
   }
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center px-5 pb-24 pt-8 sm:px-8">
+    <div className="mx-auto flex max-w-4xl flex-col items-center px-5 pb-24 pt-8 sm:px-8">
       <div className="flex flex-col items-center gap-2 text-center">
-        <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-xs font-medium tracking-wide text-accent">
+        <span className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-sm font-medium tracking-wide text-accent">
           格言フラッシュカード
         </span>
-        <h1 className="font-serif-jp text-2xl font-black sm:text-3xl">
+        <h1 className="font-serif-jp text-3xl font-black sm:text-4xl">
           今のあなたに効く一言を引く
         </h1>
-        <p className="max-w-md text-[14.5px] leading-relaxed text-muted">
+        <p className="max-w-lg text-base leading-relaxed text-muted sm:text-lg">
           カードをタップすると、その状況に最も効く古典の言葉がめくれます。
         </p>
       </div>
@@ -92,7 +93,7 @@ export default function CardsClient() {
       {activeBook && (
         <button
           onClick={clearBookFilter}
-          className="mt-4 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium"
+          className="mt-4 flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium"
           style={{ backgroundColor: activeBook.accentSoft, color: activeBook.accent }}
         >
           「{activeBook.title}」のカードのみ表示中
@@ -100,7 +101,7 @@ export default function CardsClient() {
         </button>
       )}
 
-      <div className="mt-5 flex w-full max-w-xl flex-wrap justify-center gap-2 overflow-x-auto scrollbar-none">
+      <div className="mt-5 flex w-full max-w-2xl flex-wrap justify-center gap-2 overflow-x-auto scrollbar-none">
         {(["すべて", ...categories] as const).map((c) => (
           <button
             key={c}
@@ -108,7 +109,7 @@ export default function CardsClient() {
               setCategory(c);
               goTo(0);
             }}
-            className="shrink-0 rounded-full border px-3.5 py-1.5 text-[13px] font-medium transition-colors"
+            className="shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors"
             style={
               category === c
                 ? { backgroundColor: "var(--accent)", color: "var(--accent-foreground)", borderColor: "var(--accent)" }
@@ -123,10 +124,10 @@ export default function CardsClient() {
       <div className="mt-8 w-full">
         {card ? (
           <>
-            <p className="mb-3 text-center text-xs font-medium text-muted">
+            <p className="mb-3 text-center text-sm font-medium text-muted">
               {safeIndex + 1} / {pool.length}
             </p>
-            <div className="mx-auto w-full max-w-md" style={{ perspective: 1600 }}>
+            <div className="mx-auto w-full max-w-xl sm:max-w-2xl" style={{ perspective: 1600 }}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={card.id}
@@ -134,7 +135,7 @@ export default function CardsClient() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -24 }}
                   transition={{ duration: 0.22 }}
-                  className="relative aspect-[3/4] w-full cursor-pointer select-none sm:aspect-[5/4]"
+                  className="relative h-[58vh] min-h-[440px] max-h-[600px] w-full cursor-pointer select-none sm:h-[70vh] sm:min-h-[560px] sm:max-h-[820px]"
                   style={{ perspective: 1600 }}
                   onClick={() => setFlipped((f) => !f)}
                 >
@@ -146,7 +147,7 @@ export default function CardsClient() {
                   >
                     {/* front */}
                     <div
-                      className="absolute inset-0 flex flex-col justify-between rounded-3xl border p-6 shadow-[0_12px_32px_rgba(0,0,0,0.08)] sm:p-8"
+                      className="absolute inset-0 flex flex-col rounded-3xl border p-7 shadow-[0_12px_32px_rgba(0,0,0,0.08)] sm:p-10"
                       style={{
                         backfaceVisibility: "hidden",
                         backgroundColor: book?.accentSoft,
@@ -154,22 +155,24 @@ export default function CardsClient() {
                       }}
                     >
                       <span
-                        className="self-start rounded-full bg-white/60 px-3 py-1 text-xs font-bold"
+                        className="self-start rounded-full bg-white/60 px-3.5 py-1.5 text-sm font-bold"
                         style={{ color: book?.accent }}
                       >
                         {book?.title}
                       </span>
-                      <p className="font-serif-jp text-xl font-bold leading-snug text-[#241f18] sm:text-2xl">
-                        {card.situation}
-                      </p>
-                      <span className="self-center text-xs font-medium text-[#241f18]/60">
+                      <div className="flex flex-1 items-center justify-center py-6">
+                        <p className="font-serif-jp text-ink-on-tint text-center text-2xl font-bold leading-snug sm:text-4xl">
+                          {card.situation}
+                        </p>
+                      </div>
+                      <span className="text-ink-on-tint/60 self-center text-sm font-medium">
                         タップしてめくる
                       </span>
                     </div>
 
                     {/* back */}
                     <div
-                      className="absolute inset-0 flex flex-col justify-between overflow-y-auto rounded-3xl border p-6 shadow-[0_12px_32px_rgba(0,0,0,0.08)] sm:p-8"
+                      className="absolute inset-0 flex flex-col overflow-y-auto rounded-3xl border p-7 shadow-[0_12px_32px_rgba(0,0,0,0.08)] sm:p-10"
                       style={{
                         backfaceVisibility: "hidden",
                         transform: "rotateY(180deg)",
@@ -177,31 +180,31 @@ export default function CardsClient() {
                         borderColor: book?.accent,
                       }}
                     >
-                      <div>
-                        <span
-                          className="rounded-full px-3 py-1 text-xs font-bold"
-                          style={{ backgroundColor: book?.accentSoft, color: book?.accent }}
-                        >
-                          {book?.title} ・ {card.category}
-                        </span>
+                      <span
+                        className="self-start rounded-full px-3.5 py-1.5 text-sm font-bold"
+                        style={{ backgroundColor: book?.accentSoft, color: book?.accent }}
+                      >
+                        {book?.title} ・ {card.category}
+                      </span>
+                      <div className="flex flex-1 flex-col justify-center gap-4 py-6">
                         <p
-                          className="font-serif-jp mt-4 text-lg font-bold leading-snug sm:text-xl"
+                          className="font-serif-jp text-xl font-bold leading-loose sm:text-3xl"
                           style={{ color: book?.accent }}
                         >
-                          「{card.quote}」
+                          「<Furigana text={card.quote} />」
                         </p>
-                        <p className="mt-3 text-sm leading-relaxed text-muted">
+                        <p className="text-base leading-relaxed text-muted sm:text-lg">
                           {card.meaning}
                         </p>
                       </div>
                       <div
-                        className="mt-4 rounded-xl p-3.5"
+                        className="rounded-xl p-4 sm:p-5"
                         style={{ backgroundColor: book?.accentSoft }}
                       >
-                        <p className="text-[11px] font-bold tracking-wide" style={{ color: book?.accent }}>
+                        <p className="text-sm font-bold tracking-wide" style={{ color: book?.accent }}>
                           今の自分に活かすなら
                         </p>
-                        <p className="mt-1 text-[13.5px] leading-relaxed text-[#241f18]/90">
+                        <p className="mt-1.5 text-base leading-relaxed text-ink-on-tint sm:text-lg">
                           {card.advice}
                         </p>
                       </div>
@@ -215,28 +218,28 @@ export default function CardsClient() {
               <button
                 onClick={() => goTo(safeIndex - 1)}
                 aria-label="前のカード"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-foreground/70 transition-colors hover:border-accent/50 hover:text-foreground"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-border text-foreground/70 transition-colors hover:border-accent/50 hover:text-foreground"
               >
                 ←
               </button>
               <button
                 onClick={handleShuffle}
                 aria-label="シャッフル"
-                className="flex h-11 items-center gap-1.5 rounded-full border border-border px-4 text-sm font-medium text-foreground/70 transition-colors hover:border-accent/50 hover:text-foreground"
+                className="flex h-12 items-center gap-1.5 rounded-full border border-border px-5 text-base font-medium text-foreground/70 transition-colors hover:border-accent/50 hover:text-foreground"
               >
                 シャッフル
               </button>
               <button
                 onClick={() => goTo(safeIndex + 1)}
                 aria-label="次のカード"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-foreground transition-opacity hover:opacity-90"
+                className="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-foreground transition-opacity hover:opacity-90"
               >
                 →
               </button>
             </div>
 
             {book && (
-              <p className="mt-6 text-center text-xs text-muted">
+              <p className="mt-6 text-center text-sm text-muted">
                 この一言の出典 —{" "}
                 <Link href={`/books/${book.id}`} className="font-medium underline">
                   {book.title}の要点を読む
@@ -245,7 +248,7 @@ export default function CardsClient() {
             )}
           </>
         ) : (
-          <p className="py-20 text-center text-sm text-muted">
+          <p className="py-20 text-center text-base text-muted">
             条件に合うカードがありません。
           </p>
         )}
